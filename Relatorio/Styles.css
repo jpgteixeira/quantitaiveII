@@ -1,0 +1,122 @@
+/* ======================================================
+   Banner do título com duas logos
+   ====================================================== */
+.quarto-title-block .quarto-title-banner {
+  background-image: 
+    url(QGSL.png),
+    url(IDATA.png);
+  background-size: 
+    330px,
+    330px;
+  background-position: 
+    left center,
+    right center;
+  background-repeat: 
+    no-repeat,
+    no-repeat;
+  background-color: #590000ff;
+  padding-left: 60px;
+  padding-right: 60px;
+  background-origin: content-box;
+}
+
+.title,
+.quarto-title-block .title,
+.quarto-title-block h1 {
+  color: white !important;
+}
+
+.title,
+.quarto-title-block .title,
+.quarto-title-block h1 {
+  color: white !important;
+}
+
+
+
+/* ======================================================
+   TÍTULOS "Autores" e "Afiliações"
+   (forçando todas as possibilidades)
+   ====================================================== */
+.quarto-title-block h2,
+.quarto-title-block h3,
+#authors-title,
+#affiliations-title,
+.authors-title,
+.affiliations-title,
+.quarto-authors-title,
+.quarto-affiliations-title {
+  font-weight: 700 !important;
+  color: black !important;
+}
+
+/* Caso o Quarto gere como <p><strong>Autores</strong></p> */
+.quarto-title-block p strong {
+  font-weight: 700 !important;
+  color: black !important;
+}
+
+/* ======================================================
+   NOMES DOS AUTORES
+   ====================================================== */
+.quarto-title-block .quarto-title-author-name,
+.quarto-title-block .author-name,
+.quarto-title-block .author .name,
+.quarto-title-block .author,
+.quarto-title-block .quarto-author {
+  color: black !important;
+  font-weight: 600 !important;
+}
+
+/* Links também pretos */
+.quarto-title-block .author a,
+.quarto-title-block .quarto-title-author-name a {
+  color: black !important;
+  text-decoration: none !important;
+}
+
+/* ======================================================
+   TEXTO DAS AFILIAÇÕES — FORÇAR PRETO
+   ====================================================== */
+.quarto-title-block .affiliation,
+.quarto-title-block .affiliation *,
+.quarto-title-block .affiliations,
+.quarto-title-block .affiliations * {
+  color: black !important;
+  font-weight: 400 !important;
+}
+
+/* Rótulo da afiliação: negrito */
+.quarto-title-block .affiliation .label,
+.quarto-title-block .affiliation .affil-label {
+  font-weight: 700 !important;
+  color: black !important;
+}
+
+
+/* ======================================================
+   LOGO FIXA NO CANTO INFERIOR DIREITO (SEGUNDA LOGO)
+   ====================================================== */
+#logo-flutuante {
+  position: fixed;
+  bottom: 30px;
+  right: 60px;
+  width: 200px;
+  opacity: 0.9;
+  z-index: 9999;
+  pointer-events: none;
+  transition: opacity 0.3s ease-in-out;
+}
+
+#logo-flutuante:hover {
+  opacity: 1;
+}
+
+
+p {
+  text-align: justify;
+}
+
+
+
+

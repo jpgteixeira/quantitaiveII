@@ -1,0 +1,217 @@
+---
+title: "Endogamia"
+author:  
+  - name: PhD Student João Marcos Amario de Sousa
+    id: jma
+    orcid: 0009-0002-5102-7142
+    email: joao.m.sousa@ufv.br
+    url: https://scholar.google.com/citations?user=fx1_ebQAAAAJ
+    affiliation:
+      - name: Departamento de Biologia Geral, Universidade Federal de Viçosa
+        id: dbg
+        url: https://dbg.ufv.br/
+        city: Viçosa
+        region: Minas Gerais
+        country: Brazil
+      - name: Institute of Computational and Artificial Intelligence (IDATA)
+        id: idata
+        url: https://idata.ufv.br/
+        city: Viçosa
+        region: Minas Gerais
+        country: Brazil
+  - name: PhD Student João Paulo Gusmão
+    orcid: 0000-0002-9786-8126
+    email: kaio.o.dias@ufv.br 
+    url:  
+    affiliation:
+      - name: Departamento de Biologia Geral, Universidade Federal de Viçosa (DBG/UFV)
+        id: dbg
+        url: https://dbg.ufv.br/
+        city: Viçosa
+        region: Minas Gerais
+        country: Brazil
+      - name: Institute of Computational and Artificial Intelligence (IDATA)
+        id: idata
+        url: https://idata.ufv.br/
+        city: Viçosa
+        region: Minas Gerais
+        country: Brazil
+format: 
+  html:
+    toc: true
+    toc-depth: 3
+    toc-title: Seções
+    toc-location: left
+    toc_float: true
+    number-sections: true
+    number-depth: 4
+    theme: 
+      light: journal
+      dark: darkly
+    embed-resources: true
+    self-contained: true
+    anchor-sections: true
+    smooth-scroll: true
+    code-fold: false
+    code-summary: "Code"
+    code-overflow: wrap
+    code-block-border-left: "#781c1e"
+    code-copy: hover
+    lang: pt
+    fig-format: svg
+    fig-responsive: true
+    fig-cap-location: bottom
+    tbl-cap-location: top
+    page-layout: article
+    csl: apa.csl
+    css: styles.css
+    title-block-banner: true
+    title-block-banner-color: 'white'
+    highlight-style: github
+editor_options: 
+  chunk_output_type: console
+abstract: |
+---
+
+<img src="C:\Users\agroa\Documents\GitHub\GDM-Seeds\Relatorio\UFV.png" id="logo-flutuante">
+
+```{r}
+#| label: setup
+#| include: false
+
+library(AGHmatrix)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+```
+
+::: {.callout-note}
+## Objetivo
+Este relatório apresenta um exemplo didático para entender três conceitos fundamentais em genética quantitativa, apresentados na ordem em que ocorrem biologicamente:
+
+Coeficiente de Coancestria (probabilidade de alelos se encontrarem);
+
+Coeficiente de Endogamia (consequência desse encontro no indivíduo);
+
+Matriz de Parentesco Aditivo (a estrutura matemática para os modelos biométricos).
+:::
+
+## O Pedigree de Exemplo
+Para ilustrar os conceitos, utilizaremos um pedigree simples com cinco indivíduos:
+
+A e B são fundadores (pais desconhecidos).
+
+C e D são filhos de A e B (irmãos completos).
+
+E é filho de C e D.
+
+```{r}
+#| echo: false
+ped <- data.frame(
+  id = c("A", "B", "C", "D", "E"),
+  parent1 = c("0", "0", "A", "A", "C"),
+  parent2 = c("0", "0", "B", "B", "D")
+)
+
+kable(
+  ped,
+  caption = "Pedigree utilizado no exemplo."
+) |>
+  kable_styling(full_width = TRUE)
+```
+
+```{r}
+#| label: calc-matrix
+#| include: false
+
+# Calculamos a matriz A em background para extrair os coeficientes na ordem correta
+A <- Amatrix(
+  data = ped,
+  ploidy = 2)
+
+```
+
+## Coeficiente de Coancestria ($\theta$)
+A coancestria ($\theta_{ij}$) entre dois indivíduos avalia o grau de parentesco entre eles. Ela responde à seguinte pergunta fundamental:
+
+"Se eu sortear um alelo ao acaso do indivíduo $i$ e um alelo ao acaso do indivíduo $j$, qual é a probabilidade de eles serem cópias exatas do mesmo ancestral (Idênticos por Descendência - IBD)?""
+
+Matematicamente, a matriz de coancestria ($\Theta$) é obtida dividindo a Matriz de Parentesco Aditivo ($A$) por 2.
+$$\Theta = \frac{A}{2}$$
+
+```{r}
+#| echo: false
+#| warning: false
+coancestry <- A / 2
+
+kable(
+  round(coancestry, 3),
+  caption = "Matriz de Coancestria (\\\theta\\\\)"
+) |>
+  kable_styling(full_width = TRUE)
+
+```
+
+## Interpretação:
+A coancestria entre C e D (irmãos completos) é 0,25. Isso significa que há 25% de chance de um alelo sorteado de C e um de D serem idênticos por descendência.
+
+A diagonal dessa matriz (auto-coancestria) representa a chance de sortear o mesmo alelo duas vezes dentro do mesmo indivíduo.
+
+Para o indivíduo E, esse valor é 0,625.2.
+
+## Coeficiente de Endogamia ($F$)
+Enquanto a coancestria olha para dois indivíduos diferentes, a endogamia olha para a constituição genética de um único indivíduo.
+
+O $F$ responde à pergunta: "Qual a probabilidade de os dois alelos que um indivíduo carrega em um determinado loco serem Idênticos por Descendência?"
+
+Existe uma regra de ouro na genética quantitativa: a endogamia de um indivíduo é exatamente igual à coancestria de seus pais.
+$$F_{filho} = \theta_{pai, mae}$$
+
+Podemos extrair a endogamia diretamente da diagonal da Matriz $A$, onde $F_i = A_{ii} - 1$.
+
+```{r}
+#| echo: false
+F <- diag(A) - 1
+
+F_df <- data.frame(
+  Individuo = names(F),
+  Endogamia = as.numeric(F)
+)
+
+kable(
+  F_df,
+  digits = 3,
+  caption = "Coeficiente de Endogamia ($F$) dos indivíduos."
+) |>
+  kable_styling(full_width = TRUE)
+
+```
+
+## Interpretação:
+Os indivíduos A e B possuem endogamia igual a zero porque são fundadores na base de dados.
+
+Os indivíduos C e D possuem endogamia zero porque a coancestria de seus pais (A e B) é zero.
+
+O indivíduo E apresenta endogamia de 0,25. Isso ocorre exatamente porque a coancestria entre seus pais (C e D, calculada na seção anterior) é 0,25.
+
+## Matriz de Parentesco Aditivo ($A$)
+
+Em genética quantitativa e avaliação genética, nós precisamos modelar a proporção de variância genética aditiva compartilhada entre os indivíduos.
+
+Para isso, utilizamos a Matriz de Parentesco Aditivo ($A$), que é simplesmente o dobro da matriz de coancestria.
+$$A = 2\Theta$$
+
+Para indivíduos diploides, a diagonal da matriz $A$ é composta por $1 + F_i$, refletindo que o aumento da homozigose eleva a variância aditiva disponível naquele indivíduo. Fora da diagonal, os elementos representam o parentesco esperado ($2\theta_{ij}$).
+
+```{r}
+#| echo: false
+#| warning: false
+kable(
+  round(A, 3),
+  caption = "Matriz de Parentesco Aditivo ($A$)."
+) |>
+  kable_styling(full_width = TRUE)
+```
+
+## Conclusão:
+O software constrói esta matriz $A$ simultaneamente, do indivíduo mais velho para o mais novo, utilizando as informações da geração anterior (coancestria) para definir a diagonal da geração atual (endogamia). Todos os coeficientes estão, portanto, matematicamente entrelaçados.
