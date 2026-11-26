@@ -78,6 +78,7 @@ abstract: |
 ```{r}
 #| label: setup
 #| include: false
+# install.packages("AGHmatrix")
 
 library(AGHmatrix)
 library(dplyr)
@@ -87,7 +88,7 @@ library(kableExtra)
 
 ::: {.callout-note}
 ## Objetivo
-Este relatório apresenta um exemplo didático para entender três conceitos fundamentais em genética quantitativa, apresentados na ordem em que ocorrem biologicamente:
+Este relatório apresenta um exemplo didático para entender três conceitos fundamentais em genética quantitativa, apresentados na ordem em que ocorrem biologicamente:powe
 
 Coeficiente de Coancestria (probabilidade de alelos se encontrarem);
 
